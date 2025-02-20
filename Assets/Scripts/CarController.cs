@@ -33,6 +33,9 @@ public class CarController : MonoBehaviour
         if (speed - decelerationPerTick > 0){
             speed -= decelerationPerTick;
         }
+        else{
+            speed += decelerationPerTick;
+        }
         
         speed += breakInput * breakForce;
         if (speed > maxSpeed){
@@ -42,9 +45,9 @@ public class CarController : MonoBehaviour
             speed = minimumSpeed;
         }
         
-        rb.angularVelocity = (rb.angularVelocity - (transform.up * (Vector3.Dot(rb.angularVelocity, transform.up)) )) + (transform.up * steerInput * speed * steerForce); 
+        rb.angularVelocity = transform.up * steerInput /** speed*/ * steerForce; 
 
-        rb.linearVelocity =  (rb.linearVelocity - (transform.forward * (Vector3.Dot(rb.linearVelocity, transform.forward)) )) + (speed * transform.forward);
+        rb.linearVelocity =  rb.linearVelocity - (transform.forward * Vector3.Dot(rb.linearVelocity, transform.forward) ) + (speed * transform.forward);
     }
 
     public void Accelerate(InputAction.CallbackContext context){
