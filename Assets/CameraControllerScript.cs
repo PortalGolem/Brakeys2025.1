@@ -4,7 +4,10 @@ using UnityEngine.InputSystem;
 public class CameraControllerScript : MonoBehaviour
 {
     [SerializeField] float sensitivity;
+    [SerializeField] float maxHeight;
+    [SerializeField] float minHeight;
     private Vector3 LookRotation;
+    private Vector3 localRotation;
 
     void Start()
     {
@@ -14,10 +17,10 @@ public class CameraControllerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 newRotation = LookRotation;
-        newRotation *= sensitivity;
-        newRotation = new Vector3(-LookRotation.y, LookRotation.x, 0);
-        transform.rotation = Quaternion.Euler(newRotation + transform.rotation.eulerAngles);
+        Vector3 newRotation = (new Vector3(-LookRotation.y, LookRotation.x, 0) * sensitivity) + localRotation;
+        newRotation.x = Mathf.Clamp(newRotation.x, minHeight, maxHeight);
+        localRotation = newRotation;
+        transform.localEulerAngles = newRotation;
     }
 
     public void Look(InputAction.CallbackContext context){
