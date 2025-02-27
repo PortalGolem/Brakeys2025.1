@@ -676,6 +676,10 @@ MonoBehaviour:
   steerForce: 3
   minimumSpeed: -3
   decelerationPerTick: 0.2
+  groundCheckDistance: 0.5
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
   speed: 0
   breakInput: 0
   steerInput: 0
@@ -772,7 +776,7 @@ GameObject:
   - component: {fileID: 1058008258}
   - component: {fileID: 1058008257}
   - component: {fileID: 1058008256}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: test ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}

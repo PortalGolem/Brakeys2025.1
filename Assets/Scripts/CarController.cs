@@ -1,4 +1,5 @@
 using System.ComponentModel.Design;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.InputSystem;
@@ -12,6 +13,8 @@ public class CarController : MonoBehaviour
     [SerializeField] private float steerForce = 1;
     [SerializeField] private float minimumSpeed;
     [SerializeField] public float decelerationPerTick = 0;
+    [SerializeField] private float groundCheckDistance = .5f;
+    [SerializeField] private LayerMask groundLayer;
 
     [HideInInspector] public float speed;
     [HideInInspector] public float breakInput;
@@ -44,15 +47,19 @@ public class CarController : MonoBehaviour
         if (speed < minimumSpeed){
             speed = minimumSpeed;
         }
-        
-        rb.angularVelocity = transform.up * steerInput /** speed*/ * steerForce; 
+        if (onGround()){
+            rb.angularVelocity = transform.up * steerInput * steerForce; 
 
-        rb.linearVelocity =  rb.linearVelocity - (transform.forward * Vector3.Dot(rb.linearVelocity, transform.forward) ) + (speed * transform.forward);
+            rb.linearVelocity =  rb.linearVelocity - (transform.forward * Vector3.Dot(rb.linearVelocity, transform.forward) ) + (speed * transform.forward);
+        }
+    }
+
+    private bool onGround(){
+        return Physics.Raycast(transform.position, Quaternion.AngleAxis(180, transform.right) * transform.up, groundCheckDistance, groundLayer);
     }
 
     public void Accelerate(InputAction.CallbackContext context){
         accelerationInput = context.ReadValue<float>();
-        print(accelerationInput);
     }
     public void Break(InputAction.CallbackContext context){
         breakInput = context.ReadValue<float>();
